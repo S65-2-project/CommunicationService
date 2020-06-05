@@ -4,6 +4,7 @@ metadata:
   name: communication-service
   namespace: s65-2
 spec:
+  type: NodePort
   selector:
     app: communication-service
   ports:
