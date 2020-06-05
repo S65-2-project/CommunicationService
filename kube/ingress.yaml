@@ -1,0 +1,12 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata: 
+  name: communication-service-ingress
+  namespace: s65-2
+spec:
+  rules:
+    - http:
+        paths:
+          - backend:
+              serviceName: communication-service
+              servicePort: 80
