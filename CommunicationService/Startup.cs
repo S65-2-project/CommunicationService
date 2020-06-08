@@ -12,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace CommunicationService
 {
@@ -56,6 +58,8 @@ namespace CommunicationService
             services.AddCors();
             
             services.AddControllers();
+            
+            services.AddHealthChecks().AddCheck("healthy", () => HealthCheckResult.Healthy());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,6 +82,11 @@ namespace CommunicationService
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            
+            app.UseHealthChecks("/", new HealthCheckOptions 
+            {
+                Predicate = r => r.Name.Contains("healthy")
+            });
         }
     }
 }
