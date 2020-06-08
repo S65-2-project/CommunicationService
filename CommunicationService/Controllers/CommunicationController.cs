@@ -22,7 +22,7 @@ namespace CommunicationService.Controllers
         {
             try
             {
-                return Ok(_chatService.InitializeChat(initmodel));
+                return Ok(await _chatService.InitializeChat(initmodel));
             }
             catch (Exception e)
             {
