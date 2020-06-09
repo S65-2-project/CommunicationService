@@ -27,8 +27,8 @@ namespace CommunicationService.Services
             };
             
             
-            var test = await _repository.Create(newChat);
-            return test;
+            return await _repository.Create(newChat);
+            
         }
 
         public async Task<Chat> SendMessage(Guid id, MessageModel message)
