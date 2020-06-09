@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using CommunicationService.Exceptions;
 using CommunicationService.Models;
 using CommunicationService.Services;
 using Microsoft.AspNetCore.Mvc;

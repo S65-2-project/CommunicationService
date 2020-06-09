@@ -25,7 +25,11 @@ namespace CommunicationService.Services
                 Seller = initModel.Seller,
                 Messages = new List<Message>()
             };
-            
+            var chatExists = await _repository.FindChat(newChat.Buyer, newChat.Seller);
+            if (chatExists != null) 
+            {
+                throw new ChatAlreadyExistsException(chatExists.Id);
+            }
             
             return await _repository.Create(newChat);
             

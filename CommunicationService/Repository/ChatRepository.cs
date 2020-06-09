@@ -35,5 +35,10 @@ namespace CommunicationService.Repository
         {
             return await _chat.Find(x => x.Id == id).FirstOrDefaultAsync();
         }
+
+        public async Task<Chat> FindChat(User buyer, User seller)
+        {
+            return await _chat.Find(x => x.Buyer.Id == buyer.Id && x.Seller.Id == seller.Id).FirstOrDefaultAsync();
+        }
     }
 }

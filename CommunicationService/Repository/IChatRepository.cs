@@ -27,5 +27,13 @@ namespace CommunicationService.Repository
         /// <param name="id"></param>
         /// <returns>Chat</returns>
         Task<Chat> GetChat(Guid id);
+
+        /// <summary>
+        /// Finds a chat where buyer and seller match parameters
+        /// </summary>
+        /// <param name="buyer"></param>
+        /// <param name="seller"></param>
+        /// <returns>Chat</returns>
+        Task<Chat> FindChat(User buyer, User seller);
     }
 }
