@@ -30,21 +30,21 @@ namespace CommunicationServiceTest.ServiceTests
             var sellerId = Guid.NewGuid();
             var initModel = new InitializeModel()
             {
-                Buyer = new User {Email = "test@test.test", Id = buyerId},
-                Seller = new User {Email = "my@email.be", Id = sellerId}
+                Buyer = new User {Name = "test@test.test", Id = buyerId},
+                Seller = new User {Name = "my@email.be", Id = sellerId}
             };
             
             var chatModel = new Chat()
             {
-                Buyer = new User {Email = "test@test.test", Id = buyerId},
-                Seller = new User {Email = "my@email.be", Id = sellerId},
+                Buyer = new User {Name = "test@test.test", Id = buyerId},
+                Seller = new User {Name = "my@email.be", Id = sellerId},
                 Messages = new List<Message>()
             };
             var returnmodel = new Chat()
             {
                 Id = Guid.NewGuid(),
-                Buyer = new User {Email = "test@test.test", Id = buyerId},
-                Seller = new User {Email = "my@email.be", Id = sellerId},
+                Buyer = new User {Name = "test@test.test", Id = buyerId},
+                Seller = new User {Name = "my@email.be", Id = sellerId},
                 Messages = new List<Message>()
             };
 
@@ -53,7 +53,7 @@ namespace CommunicationServiceTest.ServiceTests
 
             var result = await _chatService.InitializeChat(initModel);
 
-            Assert.Equal(chatModel.Buyer.Email, result.Buyer.Email);
+            Assert.Equal(chatModel.Buyer.Name, result.Buyer.Name);
             Assert.Equal(chatModel.Seller.Id, result.Seller.Id);
             Assert.Equal(new List<Message>(), result.Messages );
         }
