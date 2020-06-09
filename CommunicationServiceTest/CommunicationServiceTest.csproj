@@ -18,11 +18,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers" />
-      <Folder Include="Repository" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\CommunicationService\CommunicationService.csproj" />
     </ItemGroup>
 

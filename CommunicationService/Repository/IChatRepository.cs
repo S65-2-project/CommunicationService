@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using CommunicationService.Domain;
 
 namespace CommunicationService.Repository
@@ -11,5 +13,8 @@ namespace CommunicationService.Repository
         /// <param name="initModel"></param>
         /// <returns>Chat</returns>
         Task<Chat> Create(Chat chat);
+
+        Task<List<Chat>> GetUserChats(Guid id);
+        Task<List<Message>> GetChatMessages(Guid id);
     }
 }

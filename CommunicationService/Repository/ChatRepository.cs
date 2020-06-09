@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using CommunicationService.DataStoreSettings;
 using CommunicationService.Domain;
-using CommunicationService.Models;
 using MongoDB.Driver;
 
 namespace CommunicationService.Repository
@@ -22,6 +24,17 @@ namespace CommunicationService.Repository
         {
             await _chat.InsertOneAsync(chat);
             return chat;
+        }
+
+        public async Task<List<Chat>> GetUserChats(Guid id)
+        {
+            return await _chat.Find(c => c.Buyer.Id == id || c.Seller.Id == id).ToListAsync();
+        }
+
+        public async Task<List<Message>> GetChatMessages(Guid id)
+        {
+            var chat = await _chat.Find(c => c.Id == id).FirstOrDefaultAsync();
+            return chat.Messages;
         }
     }
 }

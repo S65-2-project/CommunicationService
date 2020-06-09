@@ -29,5 +29,31 @@ namespace CommunicationService.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpGet("/{id}")]
+        public async Task<IActionResult> GetUserChats(Guid id)
+        {
+            try
+            {
+                return Ok(await _chatService.GetUserChats(id));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("/messages/{id}")]
+        public async Task<IActionResult> GetChatMesssage(Guid id)
+        {
+            try
+            {
+                return Ok(await _chatService.GetChatMessages(id));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

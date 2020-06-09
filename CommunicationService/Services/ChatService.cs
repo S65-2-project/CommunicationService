@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommunicationService.Domain;
+using CommunicationService.Exceptions;
 using CommunicationService.Models;
 using CommunicationService.Repository;
 
@@ -26,6 +27,28 @@ namespace CommunicationService.Services
             };
             
             return await _repository.Create(newChat);
+        }
+
+        public async Task<List<Chat>> GetUserChats(Guid id)
+        {
+            var list = await _repository.GetUserChats(id);
+            if (list == null)
+            {
+                throw new NotFoundException("There does not exists a user with this id");
+            }
+
+            return list;
+        }
+
+        public async Task<List<Message>> GetChatMessages(Guid id)
+        {
+            var list = await _repository.GetChatMessages(id);
+            if (list == null)
+            {
+                throw new NotFoundException("There does not exists a chat with this id");
+            }
+
+            return list;
         }
     }
 }
