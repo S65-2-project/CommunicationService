@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommunicationService.Domain;
+using CommunicationService.Exceptions;
 using CommunicationService.Models;
 using CommunicationService.Repository;
 
@@ -24,8 +25,35 @@ namespace CommunicationService.Services
                 Seller = initModel.Seller,
                 Messages = new List<Message>()
             };
+            var chatExists = await _repository.FindChat(newChat.Buyer, newChat.Seller);
+            if (chatExists != null) 
+            {
+                throw new ChatAlreadyExistsException(chatExists.Id);
+            }
             
             return await _repository.Create(newChat);
+            
+        }
+
+        public async Task<Chat> SendMessage(Guid id, MessageModel message)
+        {
+            var newMessage = new Message()
+            {
+                Id = Guid.NewGuid(),
+                SenderId = message.SenderId,
+                Text = message.Text,
+                TimeStamp = DateTime.Now,
+                Read = false
+            };
+
+            var chatWithNewMessage = await _repository.GetChat(id);
+            if (chatWithNewMessage == null)
+            {
+                throw new ChatNotFoundException(id);
+            }
+            chatWithNewMessage.Messages.Add(newMessage);
+            
+            return await _repository.Update(id, chatWithNewMessage);
         }
     }
 }
