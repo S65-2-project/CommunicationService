@@ -95,6 +95,5 @@ namespace CommunicationServiceTest.ServiceTests
             Assert.Equal(chat.Messages.Count, result.Messages.Count);
             Assert.Equal(chat.Id, chatId);
         }
-        
     }
 }
