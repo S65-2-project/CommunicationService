@@ -40,7 +40,7 @@ namespace CommunicationServiceTest.ServiceTests
                 Seller = new User {Name = "my@email.be", Id = sellerId},
                 Messages = new List<Message>()
             };
-            var returnmodel = new Chat()
+            var returnChat = new Chat()
             {
                 Id = Guid.NewGuid(),
                 Buyer = new User {Name = "test@test.test", Id = buyerId},
@@ -48,8 +48,7 @@ namespace CommunicationServiceTest.ServiceTests
                 Messages = new List<Message>()
             };
 
-
-            _repository.Setup(x => x.Create(It.IsAny<Chat>())).ReturnsAsync(returnmodel);
+            _repository.Setup(x => x.Create(It.IsAny<Chat>())).ReturnsAsync(returnChat);
 
             var result = await _chatService.InitializeChat(initModel);
 

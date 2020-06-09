@@ -23,6 +23,5 @@ namespace CommunicationService.Repository
             await _chat.InsertOneAsync(chat);
             return chat;
         }
-
     }
 }

@@ -8,6 +8,5 @@ namespace CommunicationService.Models
     {
         public User Seller { get; set; }
         public User Buyer { get; set; }
-
     }
 }

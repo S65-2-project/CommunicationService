@@ -24,10 +24,8 @@ namespace CommunicationService.Services
                 Seller = initModel.Seller,
                 Messages = new List<Message>()
             };
-
-            var createdChat = await _repository.Create(newChat);
-
-            return createdChat;
+            
+            return await _repository.Create(newChat);
         }
     }
 }
