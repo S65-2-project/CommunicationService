@@ -29,5 +29,18 @@ namespace CommunicationService.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpPost("SendMessage/{id}")]
+        public async Task<IActionResult> SendMessage(Guid id, [FromBody] MessageModel message)
+        {
+            try
+            {
+                return Ok(await _chatService.SendMessage(id, message));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

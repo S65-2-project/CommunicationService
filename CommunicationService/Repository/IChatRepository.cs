@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using CommunicationService.Domain;
 
 namespace CommunicationService.Repository
@@ -11,5 +12,20 @@ namespace CommunicationService.Repository
         /// <param name="initModel"></param>
         /// <returns>Chat</returns>
         Task<Chat> Create(Chat chat);
+
+        /// <summary>
+        /// Adds a new message to the Chat database object
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="chat"></param>
+        /// <returns>Chat</returns>
+        Task<Chat> Update(Guid id, Chat chat);
+        
+        /// <summary>
+        /// Gets a chat object from the datbase
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Chat</returns>
+        Task<Chat> GetChat(Guid id);
     }
 }

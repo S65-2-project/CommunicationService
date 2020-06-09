@@ -5,6 +5,7 @@ using CommunicationService.Domain;
 using CommunicationService.Models;
 using CommunicationService.Repository;
 using CommunicationService.Services;
+using MongoDB.Driver;
 using Moq;
 using Xunit;
 
@@ -56,5 +57,44 @@ namespace CommunicationServiceTest.ServiceTests
             Assert.Equal(chatModel.Seller.Id, result.Seller.Id);
             Assert.Equal(new List<Message>(), result.Messages );
         }
+
+        [Fact]
+        public async Task SendMessage_Success()
+        {
+            Guid chatId = Guid.NewGuid();
+            
+            var messageModel = new MessageModel()
+            {
+                SenderId = Guid.NewGuid(),
+                Text = "Dit is een bericht!"
+            };
+
+            var newMessage = new Message()
+            {
+                SenderId = messageModel.SenderId,
+                Text = messageModel.Text,
+                TimeStamp = DateTime.Now,
+                Read = false
+            };
+
+            var chat = new Chat()
+            {
+                Id = chatId,
+                Buyer = new User {Name = "test@test.test", Id = Guid.NewGuid()},
+                Seller = new User {Name = "my@email.be", Id = Guid.NewGuid()},
+                Messages = new List<Message>()
+
+            };
+            //updatedChat.Messages.Add(newMessage);
+            
+            _repository.Setup(x => x.GetChat(chatId)).ReturnsAsync(chat);
+            _repository.Setup(x => x.Update(chatId, chat)).ReturnsAsync(chat);
+
+            var result = await _chatService.SendMessage(chatId, messageModel);
+
+            Assert.Equal(chat.Messages.Count, result.Messages.Count);
+            Assert.Equal(chat.Id, chatId);
+        }
+        
     }
 }
