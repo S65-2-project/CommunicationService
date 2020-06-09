@@ -1,7 +1,7 @@
-name: .NET Core push on develop branch
+name: .NET Core pull_request on develop branch
 
 on:
-  push:
+  pull_request:
     branches: [develop]
 
 env:
