@@ -39,6 +39,7 @@ namespace CommunicationService.Services
         {
             var newMessage = new Message()
             {
+                Id = Guid.NewGuid(),
                 SenderId = message.SenderId,
                 Text = message.Text,
                 TimeStamp = DateTime.Now,
