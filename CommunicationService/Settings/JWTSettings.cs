@@ -1,6 +1,6 @@
 ﻿namespace CommunicationService.Settings
 {
-    public class JWTSettings
+    public class JwtSettings
     {
         public string SecretJWT { get; set; }
     }
