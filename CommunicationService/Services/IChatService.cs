@@ -36,5 +36,12 @@ namespace CommunicationService.Services
         /// <param name="userId">id of the user</param>
         /// <returns></returns>
         Task ReadChat(Guid id, Guid userId);
+      
+        /// Adds a new message to the chat datbase object.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="message"></param>
+        /// <returns>Chat</returns>
+        Task<Chat> SendMessage(Guid id, MessageModel message);
     }
 }

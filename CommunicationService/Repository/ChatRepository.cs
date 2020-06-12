@@ -48,5 +48,21 @@ namespace CommunicationService.Repository
 
             await _chat.ReplaceOneAsync(p => p.Id == id, chat);
         }
+        
+        public async Task<Chat> Update(Guid id, Chat chat)
+        {
+            await _chat.ReplaceOneAsync(x => x.Id == id, chat);
+            return chat;
+        }
+
+        public async Task<Chat> GetChat(Guid id)
+        {
+            return await _chat.Find(x => x.Id == id).FirstOrDefaultAsync();
+        }
+
+        public async Task<Chat> FindChat(User buyer, User seller)
+        {
+            return await _chat.Find(x => x.Buyer.Id == buyer.Id && x.Seller.Id == seller.Id).FirstOrDefaultAsync();
+        }
     }
 }

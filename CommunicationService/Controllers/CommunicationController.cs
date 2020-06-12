@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using CommunicationService.Helper;
+using CommunicationService.Exceptions;
 using CommunicationService.Models;
 using CommunicationService.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -66,6 +67,18 @@ namespace CommunicationService.Controllers
             {
                 await _chatService.ReadChat(id, userId);
                 return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        [HttpPost("SendMessage/{id}")]
+        public async Task<IActionResult> SendMessage(Guid id, [FromBody] MessageModel message)
+        {
+            try
+            {
+                return Ok(await _chatService.SendMessage(id, message));
             }
             catch (Exception e)
             {
