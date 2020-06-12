@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommunicationService.DataStoreSettings;
+using CommunicationService.Repository;
+using CommunicationService.Services;
 using CommunicationService.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -14,6 +17,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Options;
+using CommunicationService.Helper;
 
 namespace CommunicationService
 {
@@ -30,11 +35,11 @@ namespace CommunicationService
         public void ConfigureServices(IServiceCollection services)
         {
             // configure strongly typed settings objects
-            var jwtSettingsSection = Configuration.GetSection("AppSettings");
-            services.Configure<JWTSettings>(jwtSettingsSection);
+            var jwtSettingsSection = Configuration.GetSection("JwtSettings");
+            services.Configure<JwtSettings>(jwtSettingsSection);
             
             // configure jwt authentication
-            var jwtSettings = jwtSettingsSection.Get<JWTSettings>();
+            var jwtSettings = jwtSettingsSection.Get<JwtSettings>();
             var key = Encoding.ASCII.GetBytes(jwtSettings.SecretJWT);
             services.AddAuthentication(x =>
                 {
@@ -56,6 +61,19 @@ namespace CommunicationService
                 });
             
             services.AddCors();
+
+            //jwt get id from token helper
+            services.AddTransient<IJwtIdClaimReaderHelper, JwtIdClaimReaderHelper>();
+
+            services.AddTransient<IChatService, ChatService>();
+
+            services.AddTransient<IChatRepository, ChatRepository>();
+            
+            services.Configure<ChatDatabaseSettings>(
+                Configuration.GetSection(nameof(ChatDatabaseSettings)));
+
+            services.AddSingleton<IChatDatabaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<ChatDatabaseSettings>>().Value);
             
             services.AddControllers();
             
