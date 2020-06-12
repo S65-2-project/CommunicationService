@@ -29,6 +29,12 @@ namespace CommunicationService.Services
         /// <returns>List of all the messages</returns>
         Task<List<Message>> GetChatMessages(Guid id);
 
+        /// <summary>
+        /// Reads all new messages for the user in a chat
+        /// </summary>
+        /// <param name="id">id of the chat</param>
+        /// <param name="userId">id of the user</param>
+        /// <returns></returns>
         Task ReadChat(Guid id, Guid userId);
     }
 }
