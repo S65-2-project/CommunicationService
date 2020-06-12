@@ -30,11 +30,23 @@ namespace CommunicationService.Repository
         {
             return await _chat.Find(c => c.Buyer.Id == id || c.Seller.Id == id).ToListAsync();
         }
-
+        
         public async Task<List<Message>> GetChatMessages(Guid id)
         {
             var chat = await _chat.Find(c => c.Id == id).FirstOrDefaultAsync();
-            return chat.Messages;
+            return chat.Messages.OrderBy(p => p.TimeStamp).ToList();
+        }
+
+        
+        public async Task ReadChat(Guid id, Guid userId)
+        {
+            var chat = await _chat.Find(c => c.Id == id).FirstOrDefaultAsync();
+            foreach (var chatMessage in chat.Messages.Where(chatMessage => chatMessage.SenderId != userId))
+            {
+                chatMessage.Read = true;
+            }
+
+            await _chat.ReplaceOneAsync(p => p.Id == id, chat);
         }
     }
 }

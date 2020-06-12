@@ -50,5 +50,10 @@ namespace CommunicationService.Services
 
             return list;
         }
+
+        public async Task ReadChat(Guid id, Guid userId)
+        {
+            await _repository.ReadChat(id, userId);
+        }
     }
 }

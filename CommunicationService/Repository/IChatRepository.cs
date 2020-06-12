@@ -16,5 +16,6 @@ namespace CommunicationService.Repository
 
         Task<List<Chat>> GetUserChats(Guid id);
         Task<List<Message>> GetChatMessages(Guid id);
+        Task ReadChat(Guid id, Guid userId);
     }
 }

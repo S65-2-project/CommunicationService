@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using CommunicationService.Helper;
 using CommunicationService.Models;
 using CommunicationService.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -30,12 +32,13 @@ namespace CommunicationService.Controllers
             }
         }
 
-        [HttpGet("/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetUserChats(Guid id)
         {
             try
             {
-                return Ok(await _chatService.GetUserChats(id));
+                var chats = await _chatService.GetUserChats(id);
+                return Ok(chats.WithoutMessages(id));
             }
             catch (Exception e)
             {
@@ -43,12 +46,26 @@ namespace CommunicationService.Controllers
             }
         }
 
-        [HttpGet("/messages/{id}")]
+        [HttpGet("messages/{id}")]
         public async Task<IActionResult> GetChatMesssage(Guid id)
         {
             try
             {
                 return Ok(await _chatService.GetChatMessages(id));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPut("{id}/{userId}")]
+        public async Task<IActionResult> ReadChat(Guid id, Guid userId)
+        {
+            try
+            {
+                await _chatService.ReadChat(id, userId);
+                return Ok();
             }
             catch (Exception e)
             {

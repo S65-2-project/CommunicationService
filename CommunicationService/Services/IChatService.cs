@@ -28,5 +28,7 @@ namespace CommunicationService.Services
         /// <param name="id">Id of the chat</param>
         /// <returns>List of all the messages</returns>
         Task<List<Message>> GetChatMessages(Guid id);
+
+        Task ReadChat(Guid id, Guid userId);
     }
 }
