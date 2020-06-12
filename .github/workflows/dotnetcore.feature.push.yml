@@ -31,7 +31,7 @@ jobs:
       # Test the project
       - name: Test
         run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-      
+
   sonarscanner:
     runs-on: ubuntu-18.04
     steps:
@@ -47,11 +47,8 @@ jobs:
           sonarOrganisation: s65-2-project
           beginArguments: >
               /d:sonar.verbose="true"
-              /d:sonar.cs.opencover.reportsPaths='"/${{ env.PROJECT_NAME }}tests/coverage.xml"'
+              /d:sonar.cs.opencover.reportsPaths='"/${{ env.PROJECT_NAME }}Tests/coverage.xml"'
               /d:sonar.coverage.exclusions='"**/*.cs","**/*.md","**/sonar-project.properties"'
         env:
           SONAR_TOKEN: ${{ secrets.SONARCLOUD_ACCESS_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    env:
-      SONAR_TOKEN: ${{ secrets.SONARCLOUD_ACCESS_TOKEN }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
