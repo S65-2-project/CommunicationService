@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using CommunicationService.Helper;
+using CommunicationService.Hubs;
+using StackExchange.Redis;
 
 namespace CommunicationService
 {
@@ -31,9 +33,23 @@ namespace CommunicationService
 
         // This method gets called by the runtime. Use this method to add services to the container.
         private IConfiguration Configuration { get; set; }
+        
+        private const string Cors = "_MyCors";
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(Cors,
+                    builder =>
+                    {
+                        builder
+                            .AllowAnyOrigin()
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
+            
             // configure strongly typed settings objects
             var jwtSettingsSection = Configuration.GetSection("JwtSettings");
             services.Configure<JwtSettings>(jwtSettingsSection);
@@ -76,6 +92,18 @@ namespace CommunicationService
                 sp.GetRequiredService<IOptions<ChatDatabaseSettings>>().Value);
             
             services.AddControllers();
+            services.AddSignalR().AddStackExchangeRedis(o => o.ConnectionFactory = async writer =>
+            {
+                var config = new ConfigurationOptions
+                {
+                    AbortOnConnectFail = false
+                };
+                config.EndPoints.Add("feddema.dev:6379");
+                config.SetDefaultPorts();
+                var connection = await ConnectionMultiplexer.ConnectAsync(config, writer);
+                connection.ConnectionFailed += (_, e) => { Console.WriteLine("Connection to Redis Failed."); };
+                return connection;
+            });
             
             services.AddHealthChecks().AddCheck("healthy", () => HealthCheckResult.Healthy());
         }
@@ -88,18 +116,18 @@ namespace CommunicationService
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-            );
+            app.UseCors(Cors);
             
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chathub").RequireCors(Cors);
+            });
             
             app.UseHealthChecks("/", new HealthCheckOptions 
             {
