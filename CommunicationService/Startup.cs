@@ -17,6 +17,7 @@ using Microsoft.Extensions.Options;
 using CommunicationService.Helper;
 using CommunicationService.Hubs;
 using Microsoft.AspNetCore.SignalR;
+using StackExchange.Redis;
 
 namespace CommunicationService
 {
@@ -116,19 +117,17 @@ namespace CommunicationService
                 sp.GetRequiredService<IOptions<ChatDatabaseSettings>>().Value);
             
             services.AddControllers();
-           /* services.AddSignalR().AddStackExchangeRedis(o => o.ConnectionFactory = async writer =>
+            services.AddSignalR().AddStackExchangeRedis(o => o.ConnectionFactory = async writer =>
             {
                 var config = new ConfigurationOptions
                 {
                     AbortOnConnectFail = false
                 };
-                config.EndPoints.Add("feddema.dev:6379");
+                config.EndPoints.Add(Configuration["HubSettings:Url"]);
                 config.SetDefaultPorts();
                 var connection = await ConnectionMultiplexer.ConnectAsync(config, writer);
-                connection.ConnectionFailed += (_, e) => { Console.WriteLine("Connection to Redis Failed."); };
                 return connection;
-            });*/
-           services.AddSignalR();
+            });
             
             services.AddHealthChecks().AddCheck("healthy", () => HealthCheckResult.Healthy());
         }
