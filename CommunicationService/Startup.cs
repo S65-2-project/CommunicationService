@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CommunicationService.DataStoreSettings;
@@ -10,7 +7,6 @@ using CommunicationService.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -20,7 +16,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using CommunicationService.Helper;
 using CommunicationService.Hubs;
-using StackExchange.Redis;
+using Microsoft.AspNetCore.SignalR;
 
 namespace CommunicationService
 {
@@ -44,9 +40,18 @@ namespace CommunicationService
                     builder =>
                     {
                         builder
-                            .AllowAnyOrigin()
                             .AllowAnyHeader()
-                            .AllowAnyMethod();
+                            .AllowAnyMethod()
+                            .AllowAnyOrigin();
+                    });
+                options.AddPolicy("signalRCors", 
+                    builder =>
+                    {
+                        builder
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .WithOrigins("localhost:3000", "localhost", "http://localhost:3000")
+                            .AllowCredentials();
                     });
             });
             
@@ -74,10 +79,29 @@ namespace CommunicationService
                         ValidateAudience = false,
                         ValidateLifetime = true,
                     };
+                    x.Events = new JwtBearerEvents()
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/chathub")))
+                            {
+                                context.Token = accessToken;
+                            }
+
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
             
             services.AddCors();
 
+            services.AddSingleton<ILiveChatService, LiveChatService>();
+            services.AddSingleton<IUserIdProvider, UserIdProvider>();
+            
+            
             //jwt get id from token helper
             services.AddTransient<IJwtIdClaimReaderHelper, JwtIdClaimReaderHelper>();
 
@@ -92,7 +116,7 @@ namespace CommunicationService
                 sp.GetRequiredService<IOptions<ChatDatabaseSettings>>().Value);
             
             services.AddControllers();
-            services.AddSignalR().AddStackExchangeRedis(o => o.ConnectionFactory = async writer =>
+           /* services.AddSignalR().AddStackExchangeRedis(o => o.ConnectionFactory = async writer =>
             {
                 var config = new ConfigurationOptions
                 {
@@ -103,7 +127,8 @@ namespace CommunicationService
                 var connection = await ConnectionMultiplexer.ConnectAsync(config, writer);
                 connection.ConnectionFailed += (_, e) => { Console.WriteLine("Connection to Redis Failed."); };
                 return connection;
-            });
+            });*/
+           services.AddSignalR();
             
             services.AddHealthChecks().AddCheck("healthy", () => HealthCheckResult.Healthy());
         }
@@ -115,18 +140,20 @@ namespace CommunicationService
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseCors(Cors);
             
             app.UseRouting();
+            app.UseCors(Cors);
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<ChatHub>("/chathub").RequireCors(Cors);
+                endpoints.MapHub<ChatHub>("/chathub").RequireCors("signalRCors");
             });
             
             app.UseHealthChecks("/", new HealthCheckOptions 

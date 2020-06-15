@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using CommunicationService.Domain;
+﻿using CommunicationService.Domain;
 
 namespace CommunicationService.Models
 {
