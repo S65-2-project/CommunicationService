@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommunicationService.Domain;
 using CommunicationService.Exceptions;
+using CommunicationService.Hubs;
 using CommunicationService.Models;
 using CommunicationService.Repository;
 
@@ -11,10 +12,12 @@ namespace CommunicationService.Services
     public class ChatService : IChatService
     {
         private readonly IChatRepository _repository;
+        private readonly ILiveChatService _liveChatService;
 
-        public ChatService(IChatRepository repository)
+        public ChatService(IChatRepository repository, ILiveChatService liveChatService)
         {
             _repository = repository;
+            _liveChatService = liveChatService;
         }
 
         public async Task<Chat> InitializeChat(InitializeModel initModel)
@@ -32,7 +35,6 @@ namespace CommunicationService.Services
             }
             
             return await _repository.Create(newChat);
-            
         }
 
         public async Task<Chat> SendMessage(Guid id, MessageModel message)
@@ -52,8 +54,18 @@ namespace CommunicationService.Services
                 throw new ChatNotFoundException(id);
             }
             chatWithNewMessage.Messages.Add(newMessage);
+            var result = await _repository.Update(id, chatWithNewMessage);
             
-            return await _repository.Update(id, chatWithNewMessage);
+            var liveMessage = new LiveMessageModel()
+            {
+                ChatId = id,
+                Message = newMessage,
+            };
+            _liveChatService.SendPrivateMessage(liveMessage, 
+                chatWithNewMessage.Buyer.Id != message.SenderId ? 
+                    chatWithNewMessage.Buyer.Id : chatWithNewMessage.Seller.Id);
+
+            return result;
         }
 
         public async Task<List<Chat>> GetUserChats(Guid id)
@@ -74,7 +86,6 @@ namespace CommunicationService.Services
             {
                 throw new NotFoundException("There does not exists a chat with this id");
             }
-
             return list;
         }
 
