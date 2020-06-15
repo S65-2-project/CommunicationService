@@ -1,12 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CommunicationService.Helper
 {
     public interface IJwtIdClaimReaderHelper
     {
-        public Guid getUserIdFromToken(string jwt);
+        /// <summary>
+        /// Extracts a userId from a given token
+        /// </summary>
+        /// <param name="jwt">the input token</param>
+        /// <returns>userId as Guid</returns>
+        public Guid GetUserIdFromToken(string jwt);
     }
 }

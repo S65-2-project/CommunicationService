@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommunicationService.Domain;
 using CommunicationService.Exceptions;
+using CommunicationService.Hubs;
 using CommunicationService.Models;
 using CommunicationService.Repository;
 using CommunicationService.Services;
-using MongoDB.Driver;
 using Moq;
 using Xunit;
 
@@ -16,13 +16,14 @@ namespace CommunicationServiceTest.ServiceTests
     {
         private readonly IChatService _chatService;
         private readonly Mock<IChatRepository> _repository;
+        private readonly Mock<ILiveChatService> _liveChatService;
 
         public ChatServiceTest()
         {
             _repository = new Mock<IChatRepository>();
-
-            _chatService = new ChatService(
-                _repository.Object);
+            _liveChatService = new Mock<ILiveChatService>();
+            
+            _chatService = new ChatService(_repository.Object, _liveChatService.Object);
         }
 
         [Fact]
