@@ -51,7 +51,9 @@ namespace CommunicationService
                         builder
                             .AllowAnyHeader()
                             .AllowAnyMethod()
-                            .WithOrigins("localhost:3000", "localhost", "http://localhost:3000")
+                            .WithOrigins("http://localhost:3000",
+                                "https://communication.develop.delegate-market.nl",
+                                "https://communication.delegate-market.nl")
                             .AllowCredentials();
                     });
             });
