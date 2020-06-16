@@ -1,18 +1,17 @@
 # communication-service
-This is the communication of the Lisk delegate market project. It was made as a groupproject for Fontys. 
+This is the communication service of the Lisk delegate market project. It was made as a groupproject for Fontys. 
 
-It was made with .NET Core 3.1 in combination with SignalR for the Lisk Delegate Market.
+It was made with .NET Core 3.1 in combination with [SignalR](https://dotnet.microsoft.com/apps/aspnet/signalr) for the Lisk Delegate Market.
 
 The other services can be found [here](https://github.com/S65-2-project). If you want to see the live product it can be found [here](https://delegate-market.nl).
 
-Via this service the user can live chat with another user to negiote deals in the application.
+Via this service the user can live chat with another user to negotiate deals in the application.
 
 ## External sources
 To run this project you will need to run the following services:
 - [MongoDB](https://www.mongodb.com/re)
 - [RabbitMQ](https://www.rabbitmq.com/)
 - [Sentry](https://sentry.io)
-- [SignalR](https://dotnet.microsoft.com/apps/aspnet/signalr)
 
 ## Configuration
 This is an example for the appsettings.json file that is needed to configure the application. 
@@ -31,17 +30,17 @@ This is an example for the appsettings.json file that is needed to configure the
     "Dsn": "",
     "IncludeRequestPayload" : true,
     "SendDefaultPii" : true,
-    "MinimumBreadcrumbLevel": "Debug",
-    "MinimumEventLevel": "Warning",
+    "MinimumBreadcrumbLevel": "",
+    "MinimumEventLevel": "",
     "AttachStackTrace": true,
     "Debug": true,
-    "DiagnosticsLevel": "Error"
+    "DiagnosticsLevel": ""
   },
   "Logging": {
     "LogLevel": {
-      "Default": "Information",
-      "Microsoft": "Warning",
-      "Microsoft.Hosting.Lifetime": "Information"
+      "Default": "",
+      "Microsoft": "",
+      "Microsoft.Hosting.Lifetime": ""
     }
   },
   "HubSettings": {
