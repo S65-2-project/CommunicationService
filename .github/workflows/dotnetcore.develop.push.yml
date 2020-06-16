@@ -37,7 +37,7 @@ jobs:
       
       # Test the project
       - name: Test
-        run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+        run: dotnet test
       
       # Publish the release build in the /release folder
       - name: Publish
