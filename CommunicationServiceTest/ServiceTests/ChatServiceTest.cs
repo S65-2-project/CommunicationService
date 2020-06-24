@@ -33,21 +33,21 @@ namespace CommunicationServiceTest.ServiceTests
             var sellerId = Guid.NewGuid();
             var initModel = new InitializeModel()
             {
-                Buyer = new User {Name = "test@test.test", Id = buyerId},
-                Seller = new User {Name = "my@email.be", Id = sellerId}
+                Buyer = new User {Email = "test@test.test", Id = buyerId},
+                Seller = new User {Email = "my@email.be", Id = sellerId}
             };
             
             var chatModel = new Chat()
             {
-                Buyer = new User {Name = "test@test.test", Id = buyerId},
-                Seller = new User {Name = "my@email.be", Id = sellerId},
+                Buyer = new User {Email = "test@test.test", Id = buyerId},
+                Seller = new User {Email = "my@email.be", Id = sellerId},
                 Messages = new List<Message>()
             };
             var returnChat = new Chat()
             {
                 Id = Guid.NewGuid(),
-                Buyer = new User {Name = "test@test.test", Id = buyerId},
-                Seller = new User {Name = "my@email.be", Id = sellerId},
+                Buyer = new User {Email = "test@test.test", Id = buyerId},
+                Seller = new User {Email = "my@email.be", Id = sellerId},
                 Messages = new List<Message>()
             };
 
@@ -55,7 +55,7 @@ namespace CommunicationServiceTest.ServiceTests
 
             var result = await _chatService.InitializeChat(initModel);
 
-            Assert.Equal(chatModel.Buyer.Name, result.Buyer.Name);
+            Assert.Equal(chatModel.Buyer.Email, result.Buyer.Email);
             Assert.Equal(chatModel.Seller.Id, result.Seller.Id);
             Assert.Equal(new List<Message>(), result.Messages );
         }
@@ -70,15 +70,15 @@ namespace CommunicationServiceTest.ServiceTests
             var chat1 = new Chat()
             {
                 Id = Guid.NewGuid(),
-                Buyer = new User {Name = "test@test.test", Id = buyerId1},
-                Seller = new User {Name = "my@email.be", Id = sellerId1},
+                Buyer = new User {Email = "test@test.test", Id = buyerId1},
+                Seller = new User {Email = "my@email.be", Id = sellerId1},
                 Messages = new List<Message>()
             };
             var chat2 = new Chat()
             {
                 Id = Guid.NewGuid(),
-                Buyer = new User {Name = "test@test.test", Id = buyerId1},
-                Seller = new User {Name = "my@email.be", Id = sellerId2},
+                Buyer = new User {Email = "test@test.test", Id = buyerId1},
+                Seller = new User {Email = "my@email.be", Id = sellerId2},
                 Messages = new List<Message>()
             };
             var chatList = new List<Chat> {chat1, chat2};
@@ -158,8 +158,8 @@ namespace CommunicationServiceTest.ServiceTests
             var chat = new Chat()
             {
                 Id = chatId,
-                Buyer = new User {Name = "test@test.test", Id = Guid.NewGuid()},
-                Seller = new User {Name = "my@email.be", Id = Guid.NewGuid()},
+                Buyer = new User {Email = "test@test.test", Id = Guid.NewGuid()},
+                Seller = new User {Email = "my@email.be", Id = Guid.NewGuid()},
                 Messages = new List<Message>()
 
             };

@@ -21,7 +21,7 @@ spec:
   tls:
     - hosts:
         - communication.delegate-market.nl
-      secretName: account-service-tls
+      secretName: communication-service-tls
 status:
   loadBalancer:
     ingress:
